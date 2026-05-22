@@ -217,3 +217,55 @@ footer {
 .category-card:hover {
     box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.4) !important;
 }
+
+/* ======= Animal Modal ======= */
+.animal-modal .modal-content {
+    border: none;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+}
+
+.modal-header-img {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.animal-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.animal-info-pill {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.animal-info-pill:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    background: #fff;
+}
+
+.animal-info-pill i {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+/* ======= Background warm ======= */
+.bg-warm {
+    background-color: #fffaf6;
+}

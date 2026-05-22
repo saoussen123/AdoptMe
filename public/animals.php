@@ -1,13 +1,21 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include "../views/header.php";
 require_once "../config/database.php";
 require_once "../models/Animal.php";
 
 $animals = Animal::getAll($pdo);
+
+// Pass user info to JS if logged in
+$userName = $_SESSION['user']['name'] ?? '';
+$userPhone = $_SESSION['user']['phone'] ?? '';
 ?>
 
 <!-- Full Page Background Wrapper -->
-<div class="fixed-top w-100 h-100" style="z-index: -1; background: url('https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&q=80&w=1500') center/cover no-repeat; filter: brightness(1.1); opacity: 0.5;"></div>
+<div class="fixed-top w-100 h-100"
+    style="z-index: -1; background: url('https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&q=80&w=1500') center/cover no-repeat; filter: brightness(1.1); opacity: 0.5;">
+</div>
 
 <div class="container py-5 text-center mt-5">
     <h1 class="display-3 fw-bold mb-2">Our Wonderful Pets</h1>
@@ -15,21 +23,19 @@ $animals = Animal::getAll($pdo);
 </div>
 
 <div class="container py-4">
-
     <div class="row g-4">
-
         <?php foreach ($animals as $a): ?>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100 border-0 animal-card shadow-sm" style="background: var(--white);">
                     <!-- Image Container -->
-                    <div class="d-flex align-items-center justify-content-center p-3" style="height: 280px; background: rgba(0,0,0,0.02);">
-                        <img src="../assets/images/<?= htmlspecialchars($a['image']) ?>" 
-                             class="rounded-3 shadow-sm transition-all" 
-                             alt="<?= htmlspecialchars($a['name']) ?>" 
-                             style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                        
-                        <span class="badge position-absolute top-0 end-0 m-3 shadow-sm px-3 py-2 rounded-2" 
-                              style="background: var(--primary); font-weight: 700; font-size: 0.7rem; z-index: 3;">
+                    <div class="d-flex align-items-center justify-content-center p-3 position-relative"
+                        style="height: 280px; background: rgba(0,0,0,0.02);">
+                        <img src="../assets/images/<?= htmlspecialchars($a['image']) ?>"
+                            class="rounded-3 shadow-sm transition-all" alt="<?= htmlspecialchars($a['name']) ?>"
+                            style="max-width: 100%; max-height: 100%; object-fit: contain;">
+
+                        <span class="badge position-absolute top-0 end-0 m-3 shadow-sm px-3 py-2 rounded-2"
+                            style="background: var(--primary); font-weight: 700; font-size: 0.7rem; z-index: 3;">
                             <?= strtoupper(htmlspecialchars($a['type'])) ?>
                         </span>
                     </div>
@@ -39,20 +45,20 @@ $animals = Animal::getAll($pdo);
                         <p class="text-muted mb-4 small" style="line-height: 1.5;">
                             <?= htmlspecialchars($a['description'] ?? "A wonderful companion.") ?>
                         </p>
-                        
+
                         <div class="mt-auto">
                             <?php if (!empty($a['is_adopted'])): ?>
                                 <button class="btn btn-secondary w-100 rounded-3 py-2 fw-bold" disabled>
                                     <i class="fas fa-check-circle me-2"></i> Already Adopted
                                 </button>
                             <?php else: ?>
-                                <?php if(isset($_SESSION['user'])): ?>
-                                    <button onclick="adopt(<?= $a['id'] ?>, this)" class="btn btn-adopt w-100 rounded-3 py-2 fw-bold">
+                                <?php if (isset($_SESSION['user'])): ?>
+                                    <a href="adoption_form.php?animal_id=<?= $a['id'] ?>" class="btn btn-adopt w-100 rounded-3 py-2 fw-bold">
                                         <i class="fas fa-heart me-2"></i> Adopt Me
-                                    </button>
+                                    </a>
                                 <?php else: ?>
                                     <a href="login.php" class="btn btn-outline-dark w-100 rounded-3 py-2 fw-bold small">
-                                        <i class="fas fa-sign-in-alt me-2"></i> View Details
+                                        <i class="fas fa-sign-in-alt me-2"></i> Login to Adopt
                                     </a>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -61,11 +67,9 @@ $animals = Animal::getAll($pdo);
                 </div>
             </div>
         <?php endforeach; ?>
-
-
     </div>
 </div>
 
-<script src="../assets/js/script.js"></script>
-
 <?php include "../views/footer.php"; ?>
+
+<script src="../assets/js/script.js"></script>

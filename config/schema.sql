@@ -6,19 +6,21 @@ USE adopt_me;
 
 -- Professional Reset: Drop and Recreate
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS adoption_forms;
 DROP TABLE IF EXISTS adoptions;
 DROP TABLE IF EXISTS animals;
 DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
 
-
 -- Table for users
-
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    phone VARCHAR(30) DEFAULT NULL,
+    reset_token VARCHAR(100) DEFAULT NULL,
+    token_expires DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -26,7 +28,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS animals (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    type VARCHAR(100) NOT NULL, -- e.g., Dog, Cat, Bird
+    type VARCHAR(100) NOT NULL,
     image VARCHAR(255) DEFAULT 'placeholder.png',
     description TEXT,
     available BOOLEAN DEFAULT TRUE,
@@ -43,6 +45,46 @@ CREATE TABLE IF NOT EXISTS adoptions (
     FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
 );
 
+-- Table for adoption forms
+CREATE TABLE IF NOT EXISTS adoption_forms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    animal_id INT NOT NULL,
+
+    -- Informations personnelles
+    full_name VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    phone VARCHAR(30) NOT NULL,
+
+    -- Situation de vie
+    housing_type ENUM('apartment', 'house_with_garden', 'other') NOT NULL,
+    lives_alone BOOLEAN NOT NULL,
+    has_children BOOLEAN NOT NULL,
+    children_ages VARCHAR(255) DEFAULT NULL,
+
+    -- Expérience avec les animaux
+    had_pet_before BOOLEAN NOT NULL,
+    has_current_pets BOOLEAN NOT NULL,
+    current_pets_description VARCHAR(255) DEFAULT NULL,
+
+    -- Santé & Allergies
+    has_allergies BOOLEAN NOT NULL,
+    household_allergies BOOLEAN NOT NULL,
+
+    -- Mode de vie
+    hours_at_home ENUM('less_4h', '4_8h', 'more_8h') NOT NULL,
+    has_garden BOOLEAN NOT NULL,
+
+    -- Motivation
+    motivation TEXT NOT NULL,
+
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
+);
+
 -- Seed some initial data
 INSERT INTO animals (name, type, image, description) VALUES
 ('Rex', 'Dog', 'dog1.jpg', 'A friendly golden retriever.'),
@@ -54,4 +96,3 @@ INSERT INTO animals (name, type, image, description) VALUES
 ('Bluey', 'Bird', 'parrot1.jpg', 'A colorful parrot that can talk!'),
 ('Sunny', 'Bird', 'parrot2.jpg', 'Cheerful and loves to whistle.'),
 ('Kiwi', 'Bird', 'parrot3.jpg', 'Small, energetic and very curious.');
-
