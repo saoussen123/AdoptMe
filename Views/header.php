@@ -1,4 +1,6 @@
-<?php if (session_status() === PHP_SESSION_NONE) { session_start(); } ?>
+<?php if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+} ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,18 +32,32 @@
                     <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
 
                     <?php if (isset($_SESSION["user"])): ?>
+
+                        <?php if ($_SESSION["user"]["id"] == 1): ?>
+                            <li class="nav-item ms-lg-2">
+                                <a href="<?= strpos($_SERVER['PHP_SELF'], 'admin') !== false ? 'index.php' : '../admin/index.php' ?>"
+                                    class="btn btn-sm btn-warning px-3 rounded-pill fw-bold">
+                                    <i class="fas fa-cog me-1"></i> Admin
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
                         <li class="nav-item ms-lg-3">
-                            <a class="nav-link fw-bold text-dark" href="profile.php">
+                            <a class="nav-link fw-bold text-dark"
+                                href="<?= strpos($_SERVER['PHP_SELF'], 'admin') !== false ? '../public/profile.php' : 'profile.php' ?>">
                                 <i class="fas fa-user-circle me-1"></i>
                                 <?= htmlspecialchars($_SESSION["user"]["name"]) ?>
                             </a>
                         </li>
                         <li class="nav-item ms-lg-2">
-                            <a href="logout.php" class="btn btn-outline-danger btn-sm px-3 rounded-pill">Logout</a>
+                            <a href="<?= strpos($_SERVER['PHP_SELF'], 'admin') !== false ? '../public/logout.php' : 'logout.php' ?>"
+                                class="btn btn-outline-danger btn-sm px-3 rounded-pill">Logout</a>
                         </li>
+
                     <?php else: ?>
                         <li class="nav-item ms-lg-3">
-                            <a href="login.php" class="btn btn-outline-primary btn-sm px-4 rounded-pill">Login</a>
+                            <a href="<?= strpos($_SERVER['PHP_SELF'], 'admin') !== false ? '../public/login.php' : 'login.php' ?>"
+                                class="btn btn-outline-primary btn-sm px-4 rounded-pill">Login</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -49,4 +65,4 @@
 
         </div>
     </nav>
-    <main>
+    <main>
